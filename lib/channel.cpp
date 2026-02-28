@@ -10,7 +10,7 @@ std::vector<Complex> Channel::apply(const std::vector<Complex>& signal) const {
         throw std::invalid_argument("sdffsdf");
     }
 
-    std::vector<Complex> noisy(signal.size(), Complex(0, 0));
+    std::vector<Complex> noisy = signal;
 
     double signal_power = 0.0;
     for (const auto& s : signal) {

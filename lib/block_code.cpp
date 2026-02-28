@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 namespace qpsk {
 
@@ -12,7 +13,7 @@ BlockCode::BlockCode(int n) : n_(n) {
         throw std::invalid_argument("lib/block_code.cpp: n must be in {2,4,6,8,11}");
     }
 
-    G_.resize(PUCCH_STD_BIT_SIZE, std::vector<u_int8_t>(n));
+    G_.resize(PUCCH_STD_BIT_SIZE, std::vector<uint8_t>(n));
 
     for (size_t i = 0; i < PUCCH_STD_BIT_SIZE; ++i) {
         for (size_t j = 0; j < n; ++j) {
@@ -21,14 +22,14 @@ BlockCode::BlockCode(int n) : n_(n) {
     }
 }
 
-std::vector<u_int8_t> BlockCode::encode(const std::vector<bool>& info_bits) const {
+std::vector<uint8_t> BlockCode::encode(const std::vector<bool>& info_bits) const {
     if (static_cast<int>(info_bits.size()) != n_) {
         throw std::invalid_argument("lib/block_code.cpp: input size mismatch");
     }
 
-    std::vector<u_int8_t> codeword(PUCCH_STD_BIT_SIZE, 0);
+    std::vector<uint8_t> codeword(PUCCH_STD_BIT_SIZE, 0);
     for (size_t i = 0; i < PUCCH_STD_BIT_SIZE; ++i) {
-        u_int8_t sum = 0;
+        uint8_t sum = 0;
 
         for (size_t j = 0; j < n_; ++j) {
             sum ^= (info_bits[j] ? G_[i][j] : 0);
@@ -51,16 +52,15 @@ std::vector<bool> BlockCode::decode(const std::vector<double>& llrs) const {
 
     for (size_t i = 0; i < total; ++i) {
         std::vector<bool> candidate(n_);
-
         for (size_t j = 0; j < n_; ++j) {
             candidate[j] = (i >> j) & 1;
         }
 
-        std::vector<u_int8_t> codeword = encode(candidate);
-        double metric = 0.0;
+        std::vector<uint8_t> codeword = encode(candidate);
 
+        double metric = 0.0;
         for (size_t j = 0; j < PUCCH_STD_BIT_SIZE; ++j) {
-            metric += (codeword[j] ? llrs[j] : -llrs[j]);
+            metric += static_cast<double>(codeword[j]) * llrs[j];
         }
 
         if (metric > best_metric) {
