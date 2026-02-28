@@ -1,0 +1,5 @@
+{
+  "mode": "channel simulation",
+  "num_of_pucch_f2_bits": 11,
+  "iterations": 1000
+}
