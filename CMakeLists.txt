@@ -21,7 +21,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-sign-compare"
 
 file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
 file(GLOB_RECURSE SRC_SOURCES "src/*.cpp")
-list(APPEND SOURCES ${LIB_SOURCES} ${SRC_SOURCES})
+list(APPEND SOURCES ${LIB_SOURCES} ${SRC_SOURCES} src/system.cpp)
 
 add_executable(qpsk ${SOURCES})
 
