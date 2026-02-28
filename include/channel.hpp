@@ -6,7 +6,7 @@
 
 namespace qpsk {
 
-constexpr double EXPECATION = 0.0;
+constexpr double EXPECTATION = 0.0;
 constexpr double STDDEV     = 1.0;
 
 class Channel {
