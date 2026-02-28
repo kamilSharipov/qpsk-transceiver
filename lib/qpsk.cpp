@@ -1,15 +1,17 @@
 #include "qpsk.hpp"
 #include "system.hpp"
 
+#include <iostream>
+
 namespace qpsk {
 
-std::vector<Complex> QPSK::modulate(const std::vector<u_int8_t>& bits) const {
+std::vector<Complex> QPSK::modulate(const std::vector<uint8_t>& bits) const {
     if (bits.size() != PUCCH_STD_BIT_SIZE) {
         throw std::invalid_argument("lib/qpsk.cpp: expected 20 bits for PUCCH");
     }
 
-    std::vector<Complex> symbols(PUCCH_STD_BIT_SIZE / QPSK_STD_SYMBOL_SIZE,
-                                 Complex(0, 0));
+    std::vector<Complex> symbols;
+    symbols.reserve(PUCCH_STD_BIT_SIZE / QPSK_STD_SYMBOL_SIZE);
     
     for (size_t i = 0; i < bits.size(); i += 2) {
         bool b0 = bits[i];
@@ -17,11 +19,11 @@ std::vector<Complex> QPSK::modulate(const std::vector<u_int8_t>& bits) const {
         double re, im;
 
         if (!b0 && !b1) {
-            re = 1.0; im = 1.0;
+            re = -1.0; im = -1.0;
         } else if (!b0 && b1) {
             re = -1.0; im = 1.0;
         } else if (b0 && b1) {
-            re = -1.0; im = -1.0;
+            re = 1.0; im = 1.0;
         } else {
             re = 1.0; im = -1.0;
         }
@@ -37,7 +39,8 @@ std::vector<double> QPSK::demodulate(const std::vector<Complex>& symbols) const 
         throw std::invalid_argument("lib/qpsk.cpp: expected 10 QPSK symbols");
     }
 
-    std::vector<double> llrs(PUCCH_STD_BIT_SIZE, 0.0);
+    std::vector<double> llrs;
+    llrs.reserve(PUCCH_STD_BIT_SIZE);
 
     for (const auto& s : symbols) {
         llrs.push_back(s.real());
@@ -47,4 +50,4 @@ std::vector<double> QPSK::demodulate(const std::vector<Complex>& symbols) const 
     return llrs;
 }
 
-} // namespace qpks
+} // namespace qpsk
