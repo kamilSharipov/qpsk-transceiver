@@ -21,7 +21,7 @@ std::vector<Complex> Channel::apply(const std::vector<Complex>& signal) const {
     double noise_power = signal_power / std::pow(10.0, snr_db_ / 10.0);
     double sigma = std::sqrt(noise_power / 2.0);
 
-    std::normal_distribution<double> dist(EXPECTATION, STDDEV);
+    std::normal_distribution<double> dist(GAUSSIAN_MEAN, GAUSSIAN_STD_DEV);
     std::random_device rd;
     std::seed_seq seed{rd(), rd(), rd(), rd()};
     std::mt19937 gen(seed);
