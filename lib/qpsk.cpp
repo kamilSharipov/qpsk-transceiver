@@ -5,15 +5,11 @@
 
 namespace qpsk {
 
-std::vector<Complex> QPSK::modulate(const std::vector<uint8_t>& bits) const {
-    if (bits.size() != PUCCH_STD_BIT_SIZE) {
-        throw std::invalid_argument("lib/qpsk.cpp: expected 20 bits for PUCCH");
-    }
-
+std::vector<Complex> QPSK::modulate(const std::bitset<CODEWORD_SIZE>& bits) const {
     std::vector<Complex> symbols;
-    symbols.reserve(PUCCH_STD_BIT_SIZE / QPSK_STD_SYMBOL_SIZE);
+    symbols.reserve(QPSK_SYMBOLS_COUNT);
     
-    for (size_t i = 0; i < bits.size(); i += 2) {
+    for (size_t i = 0; i < CODEWORD_SIZE; i += 2) {
         bool b0 = bits[i];
         bool b1 = bits[i + 1];
         double re, im;

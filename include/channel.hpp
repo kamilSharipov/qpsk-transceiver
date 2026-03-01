@@ -6,9 +6,6 @@
 
 namespace qpsk {
 
-constexpr double EXPECTATION = 0.0;
-constexpr double STDDEV      = 1.0;
-
 class Channel {
 public:
     explicit Channel(double snr_db) : snr_db_(snr_db) {}
@@ -16,6 +13,9 @@ public:
     std::vector<Complex> apply(const std::vector<Complex>& signal) const;
 
 private:
+    static constexpr double GAUSSIAN_MEAN    = 0.0;
+    static constexpr double GAUSSIAN_STD_DEV = 1.0;
+
     double snr_db_;
 };
 
