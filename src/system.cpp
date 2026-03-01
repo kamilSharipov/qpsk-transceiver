@@ -230,7 +230,6 @@ int run_simulation_mode(const json& input, json& output) {
     int success;
 
     try {
-        qpsk::QPSK mod;
         qpsk::Channel channel(snr_db);
 
         switch (n) {
