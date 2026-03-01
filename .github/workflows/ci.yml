@@ -67,6 +67,9 @@ jobs:
           name: build-${{ matrix.compiler }}-${{ matrix.build_type }}
           path: build/
 
+      - name: Make tests executable
+        run: chmod +x build/tests/qpsk_tests
+
       - name: Run tests
         working-directory: build
         run: ctest --output-on-failure
@@ -82,5 +85,4 @@ jobs:
 
       - name: Run clang-tidy
         run: |
-          find . -name "*.cpp" -o -name "*.hpp" | \
-          xargs clang-tidy-14 -p . --header-filter=.* --warnings-as-errors=*
+          find .. -name "*.cpp" | xargs clang-tidy-14 -p . --header-filter=.* --warnings-as-errors=*
