@@ -36,7 +36,7 @@ make qpsk
 
 ## Формат входных данных
 
-Режим coding
+Режим `coding`
 
 ```json
 {
@@ -46,7 +46,7 @@ make qpsk
 }
 ```
 
-Режим decoding
+Режим `decoding`
 
 ```json
 {
@@ -67,7 +67,7 @@ make qpsk
 }
 ```
 
-Режим channel simulation
+Режим `channel simulation`
 
 ```json
 {
@@ -79,7 +79,7 @@ make qpsk
 
 ## Формат выходных данных
 
-Режим coding
+Режим `coding`
 
 ```json
 {
@@ -99,7 +99,7 @@ make qpsk
 }
 ```
 
-Режим decoding
+Режим `decoding`
 
 ```json
 {
@@ -109,7 +109,7 @@ make qpsk
 }
 ```
 
-Режим channel simulation
+Режим `channel simulation`
 
 ```json
 {
@@ -123,8 +123,35 @@ make qpsk
 
 ## Построение BLER-кривых
 
-TODO
+Автоматический запуск через CMake
+После сборки проекта в директории build доступны цели для построения кривых:
+
+```bash
+cd build
+make run_plot
+```
+Настройка параметров скрипта
+В файле scripts/plot_bler_curves.py можно изменить:
+
+```python
+SNR_VALUES = np.arange(-20, 10, 1.0)   # SNR с шагом
+CODE_SIZES = [2, 4, 6, 8, 11]          # Размеры кодов
+ITERATIONS = 1000                      # Количество итераций
+EXECUTABLE = "./qpsk"                  # Путь к исполняемому файлу
+```
 
 ## Тестирование
 
-Тесты на Google Test: cd build && ctest
+Запуск тестов
+```bash
+# Сборка с тестами
+cmake -B build -DBUILD_TESTING=ON
+cmake --build build
+
+# Запуск всех тестов
+cd build
+ctest
+
+# Запуск с подробным выводом
+ctest --output-on-failure
+```
