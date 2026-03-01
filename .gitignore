@@ -42,3 +42,7 @@
 
 # build dir
 build*/
+
+# ide
+.vscode/
+.idea/

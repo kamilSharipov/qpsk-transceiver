@@ -118,8 +118,8 @@ int run_coding_mode(const json& input, json& output) {
         return 1;
     }
 
-    int n = input["num_of_pucch_f2_bits"];
-    auto bits_json = input["pucch_f2_bits"];
+    const int n = input["num_of_pucch_f2_bits"];
+    const auto bits_json = input["pucch_f2_bits"];
 
     if (!bits_json.is_array() || static_cast<int>(bits_json.size()) != n) {
         std::cerr << "Error: pucch_f2_bits must be array of " << n << " booleans\n";
@@ -160,8 +160,8 @@ int run_decoding_mode(const json& input, json& output) {
         return 1;
     }
 
-    int n = input["num_of_pucch_f2_bits"];
-    auto sym_json = input["qpsk_symbols"];
+    const int n = input["num_of_pucch_f2_bits"];
+    const auto sym_json = input["qpsk_symbols"];
 
     if (!sym_json.is_array() || 
          sym_json.size() != qpsk::CODEWORD_SIZE / qpsk::QPSK_STD_SYMBOL_SIZE) {
@@ -218,9 +218,9 @@ int run_simulation_mode(const json& input, json& output) {
         return 1;
     }
 
-    int n = input["num_of_pucch_f2_bits"];
-    int iterations = input["iterations"];
-    const int snr_db = 10;
+    const int n = input["num_of_pucch_f2_bits"];
+    const int iterations = input["iterations"];
+    const double snr_db = input.value("snr_db", 10.0);
 
     if (!input["iterations"].is_number_integer() || iterations <= 0) {
         std::cerr << "Error: 'iterations' must be positive integer\n";

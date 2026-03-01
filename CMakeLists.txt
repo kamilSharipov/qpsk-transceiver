@@ -31,6 +31,18 @@ file(GLOB_RECURSE SRC_SOURCES "src/*.cpp")
 add_executable(qpsk ${SRC_SOURCES})
 target_link_libraries(qpsk qpsk_core)
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/scripts/plot_bler_curves.py
+    ${CMAKE_BINARY_DIR}/plot_bler_curves.py
+    COPYONLY
+)
+
+add_custom_target(run_plot
+    COMMAND python3 ${CMAKE_BINARY_DIR}/plot_bler_curves.py
+    DEPENDS ${TARGET_NAME} ${CMAKE_BINARY_DIR}/plot_bler_curves.py
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
 enable_testing()
 if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
     add_subdirectory(tests)
