@@ -21,7 +21,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++-11 clang-14 libgtest-dev
+          sudo apt-get install -y \
+            cmake \
+            g++-11 \
+            clang-14 \
+            clang-tidy-14 \
+            libgtest-dev
 
       - name: Set compiler
         run: |
@@ -80,9 +85,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install clang-tidy
-        run: sudo apt-get install -y clang-tidy-14
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            g++-11 \
+            clang-14 \
+            clang-tidy-14 \
+            libgtest-dev
+
+      - name: Configure CMake (to generate compile_commands.json)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
 
       - name: Run clang-tidy
+        working-directory: build
         run: |
           find .. -name "*.cpp" | xargs clang-tidy-14 -p . --header-filter=.* --warnings-as-errors=*
