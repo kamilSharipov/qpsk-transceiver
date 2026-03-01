@@ -7,7 +7,7 @@ namespace qpsk {
 
 std::vector<Complex> Channel::apply(const std::vector<Complex>& signal) const {
     if (signal.empty()) {
-        throw std::invalid_argument("sdffsdf");
+        throw std::invalid_argument("lib/channel.cpp: signal is empty");
     }
 
     std::vector<Complex> noisy = signal;
