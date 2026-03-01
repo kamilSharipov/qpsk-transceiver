@@ -31,12 +31,12 @@ std::vector<Complex> QPSK::modulate(const std::bitset<CODEWORD_SIZE>& bits) cons
 }
 
 std::vector<double> QPSK::demodulate(const std::vector<Complex>& symbols) const {
-    if (symbols.size() != PUCCH_STD_BIT_SIZE / QPSK_STD_SYMBOL_SIZE) {
+    if (symbols.size() != QPSK_SYMBOLS_COUNT) {
         throw std::invalid_argument("lib/qpsk.cpp: expected 10 QPSK symbols");
     }
 
     std::vector<double> llrs;
-    llrs.reserve(PUCCH_STD_BIT_SIZE);
+    llrs.reserve(CODEWORD_SIZE);
 
     for (const auto& s : symbols) {
         llrs.push_back(s.real());

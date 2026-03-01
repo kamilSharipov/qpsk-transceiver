@@ -20,13 +20,17 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-sign-compare")
 
 file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
-file(GLOB_RECURSE SRC_SOURCES "src/*.cpp")
-list(APPEND SOURCES ${LIB_SOURCES} ${SRC_SOURCES})
-
-add_executable(qpsk ${SOURCES})
-
-target_include_directories(qpsk
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
-        ${PROJECT_SOURCE_DIR}/third_party
+add_library(qpsk_core STATIC ${LIB_SOURCES})
+target_include_directories(qpsk_core PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/third_party
 )
+
+file(GLOB_RECURSE SRC_SOURCES "src/*.cpp")
+add_executable(qpsk ${SRC_SOURCES})
+target_link_libraries(qpsk qpsk_core)
+
+enable_testing()
+if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
+    add_subdirectory(tests)
+endif()
