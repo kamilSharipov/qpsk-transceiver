@@ -220,7 +220,7 @@ int run_simulation_mode(const json& input, json& output) {
 
     int n = input["num_of_pucch_f2_bits"];
     int iterations = input["iterations"];
-    const int snr_db = -5;
+    const int snr_db = 10;
 
     if (!input["iterations"].is_number_integer() || iterations <= 0) {
         std::cerr << "Error: 'iterations' must be positive integer\n";
