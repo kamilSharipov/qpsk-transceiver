@@ -1,0 +1,86 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ " main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++-11 clang-14 libgtest-dev
+
+      - name: Set compiler
+        run: |
+          if [[ "${{ matrix.compiler }}" == "g++" ]]; then
+            echo "CC=gcc-11" >> $GITHUB_ENV
+            echo "CXX=g++-11" >> $GITHUB_ENV
+          else
+            echo "CC=clang-14" >> $GITHUB_ENV
+            echo "CXX=clang++-14" >> $GITHUB_ENV
+          fi
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_C_COMPILER=$CC \
+            -DCMAKE_CXX_COMPILER=$CXX
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: build/
+
+  test:
+    needs: build
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: build/
+
+      - name: Run tests
+        working-directory: build
+        run: ctest --output-on-failure
+
+  clang-tidy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install clang-tidy
+        run: sudo apt-get install -y clang-tidy-14
+
+      - name: Run clang-tidy
+        run: |
+          find . -name "*.cpp" -o -name "*.hpp" | \
+          xargs clang-tidy-14 -p . --header-filter=.* --warnings-as-errors=*
