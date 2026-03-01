@@ -30,3 +30,9 @@ target_include_directories(qpsk
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/third_party
 )
+
+enable_testing()
+
+if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
+    add_subdirectory(tests)
+endif()
