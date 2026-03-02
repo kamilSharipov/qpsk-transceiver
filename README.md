@@ -34,6 +34,23 @@ make qpsk
 ./qpsk input.json
 ```
 
+## Бенчмарки декодеров
+
+Проект включает несколько реализаций реализаций декодера:
+
+- `BasicDecoder` - полный перебор всех комбинаций
+- `PrecomputedDecoder` - с предвычисленными кодовыми словами
+
+### Запуск бенчмарков
+
+```bash
+cd build
+make benchmark
+./benchmark
+# или
+make run_benchmark
+```
+
 ## Формат входных данных
 
 Режим `coding`

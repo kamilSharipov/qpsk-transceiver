@@ -13,7 +13,7 @@ PrecomputedDecoder<N>::PrecomputedDecoder() {
 template <int N>
 typename std::bitset<N> PrecomputedDecoder<N>::decode(const std::vector<double>& llrs) const {
     if (llrs.size() != CODEWORD_SIZE) {
-        throw std::invalid_argument("LLR vector must have 20 elements");
+        throw std::invalid_argument("lib/decoders/precomputed_decoder.cpp: LLR vector must have 20 elements");
     }
 
     size_t total = 1ULL << N;
