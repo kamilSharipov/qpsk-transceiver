@@ -48,3 +48,12 @@ enable_testing()
 if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
     add_subdirectory(tests)
 endif()
+
+add_executable(benchmark benchmark/main.cpp)
+target_link_libraries(benchmark qpsk_core)
+
+add_custom_target(run_benchmark
+    COMMAND ./benchmark
+    DEPENDS benchmark
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
