@@ -1,5 +1,6 @@
 {
   "mode": "channel simulation",
   "num_of_pucch_f2_bits": 11,
+  "snr_db": 10.0,
   "iterations": 1000
 }
