@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system.hpp"
-#include "block_code.hpp"
+#include "encoder.hpp"
 
 #include <vector>
 #include <cstdint>
