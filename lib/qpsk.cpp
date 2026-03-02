@@ -15,16 +15,16 @@ std::vector<Complex> QPSK::modulate(const std::bitset<CODEWORD_SIZE>& bits) cons
         double re, im;
 
         if (!b0 && !b1) {
-            re = -NORM;
-            im = -NORM;
+            re =  -NORM;
+            im =  -NORM;
         } else if (!b0 && b1) {
             re = -NORM;
-            im = NORM;
+            im =  NORM;
         } else if (b0 && b1) {
-            re = NORM;
-            im = NORM;
+            re = +NORM;
+            im = +NORM;
         } else {
-            re = NORM;
+            re =  NORM;
             im = -NORM;
         }
 
