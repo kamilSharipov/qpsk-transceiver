@@ -66,7 +66,17 @@ std::vector<qpsk::Complex> process_coding(const json& bits_json) {
     std::bitset<N> info_bits;
     
     for (int i = 0; i < N; ++i) {
-        info_bits[i] = bits_json[i].get<bool>();
+        if (!bits_json[i].is_number_integer()) {
+            throw std::invalid_argument("Each bit must be integer 0 or 1");
+        }
+
+        int bit_value = bits_json[i].get<int>();
+
+        if (bit_value != 0 && bit_value != 1) {
+            throw std::invalid_argument("Bit value must be 0 or 1");
+        }
+
+        info_bits[i] = (bit_value == 1);
     }
     
     auto codeword = code.encode(info_bits);
@@ -82,7 +92,7 @@ json process_decoding(const std::vector<double>& llrs) {
     json bits_array = json::array();
 
     for (int i = 0; i < N; ++i) {
-        bits_array.push_back(static_cast<bool>(decoded[i]));
+        bits_array.push_back(decoded[i] ? 1 : 0);
     }
 
     return bits_array;
@@ -126,6 +136,18 @@ int run_coding_mode(const json& input, json& output) {
     if (!bits_json.is_array() || static_cast<int>(bits_json.size()) != n) {
         std::cerr << "Error: pucch_f2_bits must be array of " << n << " booleans\n";
         return 1;
+    }
+
+    for (const auto& val : bits_json) {
+        if (!val.is_number_integer()) {
+            std::cerr << "Error: each bit must be integer 0 or 1\n";
+            return 1;
+        }
+        int bit = val.get<int>();
+        if (bit != 0 && bit != 1) {
+            std::cerr << "Error: bit value must be 0 or 1, got " << bit << "\n";
+            return 1;
+        }
     }
 
     try {
