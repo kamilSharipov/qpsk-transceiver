@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "nlohmann/json.hpp"
+using namespace qpsk;
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
