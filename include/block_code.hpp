@@ -76,6 +76,8 @@ public:
             for (size_t j = 0; j < CODEWORD_SIZE; ++j) {
                 if (codeword[j]) {
                     metric += llrs[j];
+                } else {
+                    metric -= llrs[j];
                 }
             }
 
