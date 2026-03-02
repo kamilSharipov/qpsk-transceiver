@@ -15,13 +15,17 @@ std::vector<Complex> QPSK::modulate(const std::bitset<CODEWORD_SIZE>& bits) cons
         double re, im;
 
         if (!b0 && !b1) {
-            re = -1.0; im = -1.0;
+            re =  -NORM;
+            im =  -NORM;
         } else if (!b0 && b1) {
-            re = -1.0; im = 1.0;
+            re = -NORM;
+            im =  NORM;
         } else if (b0 && b1) {
-            re = 1.0; im = 1.0;
+            re = +NORM;
+            im = +NORM;
         } else {
-            re = 1.0; im = -1.0;
+            re =  NORM;
+            im = -NORM;
         }
 
         symbols.emplace_back(Complex(re, im));
