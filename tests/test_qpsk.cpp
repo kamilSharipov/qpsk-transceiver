@@ -3,6 +3,8 @@
 #include <bitset>
 
 #include "qpsk.hpp"
+#include "encoder.hpp"
+#include "basic_decoder.hpp"
 
 using namespace qpsk;
 
@@ -75,11 +77,12 @@ TEST(QPSKTest, DemodulateInvalidInputSize) {
 }
 
 TEST(QPSKTest, IntegrationWithDecoder) {
-    BlockCode<2> decoder;
+    BlockEncoder<2> code;
+    BasicDecoder<2> decoder;
     QPSK mod;
 
     std::bitset<2> info("10");
-    auto cw = decoder.encode(info);
+    auto cw = code.encode(info);
 
     auto symbols = mod.modulate(cw);
     auto llrs = mod.demodulate(symbols);

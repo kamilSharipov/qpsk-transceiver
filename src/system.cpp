@@ -1,5 +1,6 @@
 #include "system.hpp"
-#include "block_code.hpp"
+#include "encoder.hpp"
+#include "basic_decoder.hpp"
 #include "qpsk.hpp"
 #include "channel.hpp"
 
@@ -61,7 +62,7 @@ std::bitset<N> generate_random_bits() {
 
 template<int N>
 std::vector<qpsk::Complex> process_coding(const json& bits_json) {
-    qpsk::BlockCode<N> code;
+    qpsk::BlockEncoder<N> code;
     std::bitset<N> info_bits;
     
     for (int i = 0; i < N; ++i) {
@@ -75,8 +76,8 @@ std::vector<qpsk::Complex> process_coding(const json& bits_json) {
 
 template<int N>
 json process_decoding(const std::vector<double>& llrs) {
-    qpsk::BlockCode<N> code;
-    auto decoded = code.decode(llrs);
+    qpsk::BasicDecoder<N> decoder;
+    auto decoded = decoder.decode(llrs);
     
     json bits_array = json::array();
 
@@ -89,7 +90,8 @@ json process_decoding(const std::vector<double>& llrs) {
 
 template<int N>
 int process_simulation(int iterations, double snr_db) {
-    qpsk::BlockCode<N> code;
+    qpsk::BlockEncoder<N> code;
+    qpsk::BasicDecoder<N> decoder;
     qpsk::QPSK mod;
     qpsk::Channel channel(snr_db);
     
@@ -103,7 +105,7 @@ int process_simulation(int iterations, double snr_db) {
         auto rx_symbols = channel.apply(symbols);
 
         auto llrs = mod.demodulate(rx_symbols);
-        auto rx_bits = code.decode(llrs);
+        auto rx_bits = decoder.decode(llrs);
 
         if (tx_bits == rx_bits) {
             ++success;

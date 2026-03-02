@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "block_code.hpp"
+#include "encoder.hpp"
+#include "basic_decoder.hpp"
 
 using namespace qpsk;
 
 TEST(BlockCodeTest, EncodeN2) {
-    BlockCode<2> code;
+    BlockEncoder<2> code;
     std::bitset<2> info("10");
     auto cw = code.encode(info);
 
@@ -17,15 +18,15 @@ TEST(BlockCodeTest, EncodeN2) {
 TEST(BlockCodeTest, AllValidNWork) {
     auto test_n = [](int n) {
         if (n == 2) {
-            BlockCode<2> c; std::bitset<2> i(1); c.encode(i);
+            BlockEncoder<2> c; std::bitset<2> i(1); c.encode(i);
         } else if (n == 4) {
-            BlockCode<4> c; std::bitset<4> i(5); c.encode(i);
+            BlockEncoder<4> c; std::bitset<4> i(5); c.encode(i);
         } else if (n == 6) {
-            BlockCode<6> c; std::bitset<6> i(21); c.encode(i);
+            BlockEncoder<6> c; std::bitset<6> i(21); c.encode(i);
         } else if (n == 8) {
-            BlockCode<8> c; std::bitset<8> i(127); c.encode(i);
+            BlockEncoder<8> c; std::bitset<8> i(127); c.encode(i);
         } else if (n == 11) {
-            BlockCode<11> c; std::bitset<11> i(1023); c.encode(i);
+            BlockEncoder<11> c; std::bitset<11> i(1023); c.encode(i);
         }
     };
 
@@ -35,7 +36,8 @@ TEST(BlockCodeTest, AllValidNWork) {
 }
 
 TEST(BlockCodeTest, DecodeNoNoiseN2) {
-    BlockCode<2> code;
+    BlockEncoder<2> code;
+    BasicDecoder<2> decoder;
     std::bitset<2> tx("10");
     auto cw = code.encode(tx);
 
@@ -44,12 +46,13 @@ TEST(BlockCodeTest, DecodeNoNoiseN2) {
         llrs[i] = cw[i] ? 1.0 : -1.0;
     }
 
-    auto rx = code.decode(llrs);
+    auto rx = decoder.decode(llrs);
     EXPECT_EQ(rx, tx);
 }
 
 TEST(BlockCodeTest, DecodeNoNoiseN4) {
-    BlockCode<4> code;
+    BlockEncoder<4> code;
+    BasicDecoder<4> decoder;
     std::bitset<4> tx("1101");
     auto cw = code.encode(tx);
 
@@ -58,19 +61,19 @@ TEST(BlockCodeTest, DecodeNoNoiseN4) {
         llrs[i] = cw[i] ? 10.0 : -10.0;
     }
 
-    auto rx = code.decode(llrs);
+    auto rx = decoder.decode(llrs);
     EXPECT_EQ(rx, tx);
 }
 
 TEST(BlockCodeTest, DecodeInvalidLlrSize) {
-    BlockCode<2> code;
+    BasicDecoder<2> code;
     std::vector<double> llrs(19);
 
     EXPECT_THROW(code.decode(llrs), std::invalid_argument);
 }
 
 TEST(BlockCodeTest, CodewordSizeIs20) {
-    BlockCode<2> code;
+    BlockEncoder<2> code;
     std::bitset<2> info("10");
     auto cw = code.encode(info);
 
@@ -78,7 +81,8 @@ TEST(BlockCodeTest, CodewordSizeIs20) {
 }
 
 TEST(BlockCodeTest, ExhaustiveDecodeN2) {
-    BlockCode<2> code;
+    BlockEncoder<2> code;
+    BasicDecoder<2> decoder;
 
     for (int i = 0; i < 4; ++i) {
         std::bitset<2> tx(i);
@@ -89,14 +93,15 @@ TEST(BlockCodeTest, ExhaustiveDecodeN2) {
             llrs[j] = cw[j] ? 5.0 : -5.0;
         }
 
-        auto rx = code.decode(llrs);
+        auto rx = decoder.decode(llrs);
 
         EXPECT_EQ(rx, tx) << "Failed for input " << i;
     }
 }
 
 TEST(BlockCodeTest, DecodeWithLowNoiseN4) {
-    BlockCode<4> code;
+    BlockEncoder<4> code;
+    BasicDecoder<4> decoder;
     std::bitset<4> tx("1010");
     auto cw = code.encode(tx);
 
@@ -107,12 +112,12 @@ TEST(BlockCodeTest, DecodeWithLowNoiseN4) {
         llrs[i] = ideal_llr + (ideal_llr > 0 ? -0.15 : 0.15);
     }
 
-    auto rx = code.decode(llrs);
+    auto rx = decoder.decode(llrs);
     EXPECT_EQ(rx, tx) << "Decoding failed under low noise";
 }
 
 TEST(BlockCodeTest, ZeroInputGivesZeroOutput) {
-    BlockCode<11> code;
+    BlockEncoder<11> code;
     std::bitset<11> zero_info(0);
     auto cw = code.encode(zero_info);
 
@@ -122,23 +127,26 @@ TEST(BlockCodeTest, ZeroInputGivesZeroOutput) {
 }
 
 TEST(BlockCodeTest, ExhaustiveDecodeN4) {
-    BlockCode<4> code;
+    BlockEncoder<4> code;
+    BasicDecoder<4> decoder;
     const int total = 1 << 4;
 
     for (int i = 0; i < total; ++i) {
         std::bitset<4> tx(i);
         auto cw = code.encode(tx);
         std::vector<double> llrs(CODEWORD_SIZE);
+
         for (size_t j = 0; j < CODEWORD_SIZE; ++j) {
             llrs[j] = cw[j] ? 3.0 : -3.0;
         }
-        auto rx = code.decode(llrs);
+
+        auto rx = decoder.decode(llrs);
         EXPECT_EQ(rx, tx) << "Failed for input " << i;
     }
 }
 
 TEST(BlockCodeTest, CorrectWordHasMaxMetric) {
-    BlockCode<2> code;
+    BlockEncoder<2> code;
     std::bitset<2> tx("11");
     auto cw_tx = code.encode(tx);
 
