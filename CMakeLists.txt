@@ -24,6 +24,7 @@ file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
 add_library(qpsk_core STATIC ${LIB_SOURCES})
 target_include_directories(qpsk_core PUBLIC
     ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/decoders
     ${PROJECT_SOURCE_DIR}/third_party
 )
 
