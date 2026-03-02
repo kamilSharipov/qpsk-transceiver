@@ -8,11 +8,12 @@ using namespace qpsk;
 
 TEST(QPSKTest, ModulateAllCombinations) {
     QPSK mod;
+
     std::vector<std::pair<std::bitset<2>, Complex>> cases = {
-        {std::bitset<2>("00"), Complex(-1.0, -1.0)},
-        {std::bitset<2>("10"), Complex(-1.0,  1.0)},
-        {std::bitset<2>("11"), Complex( 1.0,  1.0)},
-        {std::bitset<2>("01"), Complex( 1.0, -1.0)}
+        {std::bitset<2>("00"), Complex(-NORM, -NORM)},
+        {std::bitset<2>("01"), Complex(+NORM, -NORM)},
+        {std::bitset<2>("11"), Complex( NORM,  NORM)},
+        {std::bitset<2>("10"), Complex(-NORM, +NORM)}
     };
 
     for (const auto& [bits_pair, expected] : cases) {
@@ -23,8 +24,10 @@ TEST(QPSKTest, ModulateAllCombinations) {
         auto symbols = mod.modulate(full_bits);
 
         ASSERT_EQ(symbols.size(), QPSK_SYMBOLS_COUNT);
-        EXPECT_NEAR(symbols[0].real(), expected.real(), 1e-9);
-        EXPECT_NEAR(symbols[0].imag(), expected.imag(), 1e-9);
+        EXPECT_NEAR(symbols[0].real(), expected.real(), 1e-9)
+            << "Failed for bits: " << bits_pair;
+        EXPECT_NEAR(symbols[0].imag(), expected.imag(), 1e-9)
+            << "Failed for bits: " << bits_pair;
     }
 }
 
