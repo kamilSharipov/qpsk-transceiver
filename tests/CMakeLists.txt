@@ -5,6 +5,7 @@ add_executable(qpsk_tests
     test_decoders.cpp
     test_qpsk.cpp
     test_channel.cpp
+    test_json_helpers.cpp
 )
 
 target_link_libraries(qpsk_tests
