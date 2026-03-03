@@ -1,7 +1,8 @@
 find_package(GTest REQUIRED)
 
 add_executable(qpsk_tests
-    test_block_code.cpp
+    test_encoder.cpp
+    test_decoders.cpp
     test_qpsk.cpp
     test_channel.cpp
 )
