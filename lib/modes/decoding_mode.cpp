@@ -1,7 +1,7 @@
 #include "system.hpp"
-#include "basic_decoder.hpp"
 #include "qpsk.hpp"
 #include "json_helpers.hpp"
+#include "precomputed_decoder.hpp"
 
 #include <iostream>
 
@@ -9,7 +9,8 @@ namespace qpsk {
 
 template<int N>
 json process_decoding(const std::vector<double>& llrs) {
-    BasicDecoder<N> decoder;
+    PrecomputedDecoder<N> decoder;
+
     auto decoded = decoder.decode(llrs);
     
     json bits_array = json::array();
