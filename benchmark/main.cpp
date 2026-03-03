@@ -89,7 +89,6 @@ int main() {
     std::cout << "Decoder Benchmark\n";
     std::cout << "========================================\n\n";
 
-    std::cout << "\n";
     run_benchmarks<2>(10000);
     run_benchmarks<4>(10000);
     run_benchmarks<6>(10000);

@@ -62,7 +62,7 @@ int run_simulation_mode(const json& input, json& output) {
             case 8:  success = process_simulation<8>(iterations, snr_db); break;
             case 11: success = process_simulation<11>(iterations, snr_db); break;
             default:
-                throw std::invalid_argument("Invalid num_of_pucch_f2_bits");
+                throw std::invalid_argument("lib/modes/simulation_mode.cpp: invalid num_of_pucch_f2_bits");
         }
     } catch (const std::exception& e) {
         std::cerr << "Simulation error: " << e.what() << "\n";

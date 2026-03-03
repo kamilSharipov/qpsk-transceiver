@@ -12,7 +12,7 @@ json process_decoding(const std::vector<double>& llrs) {
     PrecomputedDecoder<N> decoder;
 
     auto decoded = decoder.decode(llrs);
-    
+
     json bits_array = json::array();
 
     for (int i = 0; i < N; ++i) {
@@ -65,7 +65,7 @@ int run_decoding_mode(const json& input, json& output) {
             case 8:  bits_array = process_decoding<8>(llrs); break;
             case 11: bits_array = process_decoding<11>(llrs); break;
             default:
-                throw std::invalid_argument("Invalid num_of_pucch_f2_bits");
+                throw std::invalid_argument("lib/modes/decoding_mode.cpp: invalid num_of_pucch_f2_bits");
         }
 
         output["mode"] = "decoding";
