@@ -20,18 +20,12 @@ private:
 
 #else
 
+#warning "SIMD decoder not available"
+
 template <int N>
-class SimdDecoder : public AbstractDecoder<N> {
-public:
-    SimdDecoder() {
-        static_assert(sizeof(N) == 0, "SIMD decoder requires AVX2 support");
-    }
-
-    std::bitset<N> decode(const std::vector<double>&) const override {
-        throw std::runtime_error("SIMD decoder not available");
-    }
-
-    std::string name() const override { return "SIMD (unavailable)"; }
+class SimdDecoder : public AbstractDecoder {
+private:
+    SimdDecoder() = delete;
 };
 
 #endif
