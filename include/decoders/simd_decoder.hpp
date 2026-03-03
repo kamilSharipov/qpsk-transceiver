@@ -20,10 +20,8 @@ private:
 
 #else
 
-#warning "SIMD decoder not available"
-
 template <int N>
-class SimdDecoder : public AbstractDecoder {
+class SimdDecoder : public AbstractDecoder<N> {
 private:
     SimdDecoder() = delete;
 };
