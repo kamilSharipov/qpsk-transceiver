@@ -1,4 +1,4 @@
-#include "decoders/basic_decoder.hpp"
+#include "basic_decoder.hpp"
 
 namespace qpsk {
 
