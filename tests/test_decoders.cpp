@@ -13,16 +13,16 @@ template<int N, typename Decoder>
 void test_decoder_no_noise(Decoder& decoder, const std::string& name) {
     BlockEncoder<N> encoder;
     const int total = 1 << N;
-    
+
     for (int i = 0; i < total; ++i) {
         std::bitset<N> tx(i);
         auto cw = encoder.encode(tx);
-        
+
         std::vector<double> llrs(CODEWORD_SIZE);
         for (size_t j = 0; j < CODEWORD_SIZE; ++j) {
             llrs[j] = cw[j] ? 10.0 : -10.0;
         }
-        
+
         auto rx = decoder.decode(llrs);
         EXPECT_EQ(rx, tx) << name << " failed for input " << i;
     }
@@ -109,18 +109,18 @@ TEST(DecoderTest, AllDecodersSameResult) {
     BlockEncoder<4> encoder;
     std::bitset<4> tx("1010");
     auto cw = encoder.encode(tx);
-    
+
     std::vector<double> llrs(CODEWORD_SIZE);
     for (size_t j = 0; j < CODEWORD_SIZE; ++j) {
         llrs[j] = cw[j] ? 2.0 : -2.0;
     }
-    
+
     BasicDecoder<4> basic;
     PrecomputedDecoder<4> pre;
-    
+
     auto res_basic = basic.decode(llrs);
     auto res_pre = pre.decode(llrs);
-    
+
     EXPECT_EQ(res_basic, tx);
     EXPECT_EQ(res_pre, tx);
     
@@ -134,7 +134,7 @@ TEST(DecoderTest, AllDecodersSameResult) {
 TEST(DecoderTest, InvalidLlrSize) {
     BasicDecoder<2> decoder;
     std::vector<double> llrs(19);
-    
+
     EXPECT_THROW(decoder.decode(llrs), std::invalid_argument);
 }
 
@@ -143,13 +143,13 @@ TEST(DecoderTest, WithNoise) {
     BasicDecoder<4> decoder;
     std::bitset<4> tx("1010");
     auto cw = encoder.encode(tx);
-    
+
     std::vector<double> llrs(CODEWORD_SIZE);
     for (size_t j = 0; j < CODEWORD_SIZE; ++j) {
         double ideal = cw[j] ? 3.0 : -3.0;
         llrs[j] = ideal + (rand() % 100 - 50) / 100.0;
     }
-    
+
     auto rx = decoder.decode(llrs);
     EXPECT_EQ(rx, tx);
 }

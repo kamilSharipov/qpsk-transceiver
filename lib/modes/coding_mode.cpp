@@ -14,13 +14,13 @@ std::vector<Complex> process_coding(const json& bits_json) {
     
     for (int i = 0; i < N; ++i) {
         if (!bits_json[i].is_number_integer()) {
-            throw std::invalid_argument("Each bit must be integer 0 or 1");
+            throw std::invalid_argument("lib/modes/coding_mode.cpp: each bit must be integer 0 or 1");
         }
 
         int bit_value = bits_json[i].get<int>();
 
         if (bit_value != 0 && bit_value != 1) {
-            throw std::invalid_argument("Bit value must be 0 or 1");
+            throw std::invalid_argument("lib/modes/coding_mode.cpp: bit value must be 0 or 1");
         }
 
         info_bits[i] = (bit_value == 1);
@@ -67,7 +67,7 @@ int run_coding_mode(const json& input, json& output) {
             case 8:  symbols = process_coding<8>(bits_json); break;
             case 11: symbols = process_coding<11>(bits_json); break;
             default:
-                throw std::invalid_argument("Invalid num_of_pucch_f2_bits");
+                throw std::invalid_argument("lib/modes/coding_mode.cpp: invalid num_of_pucch_f2_bits");
         }
 
         json symbols_array = json::array();

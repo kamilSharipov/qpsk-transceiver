@@ -64,7 +64,7 @@ TEST(JsonHelpersTest, FormatComplexMixed) {
     Complex c(3.0, -4.0);
     auto s = format_complex(c);
     EXPECT_EQ(s, "3.000000-4.000000j");
-    
+
     c = Complex(-3.0, 4.0);
     s = format_complex(c);
     EXPECT_EQ(s, "-3.000000+4.000000j");
@@ -91,12 +91,12 @@ TEST(JsonHelpersTest, ComplexRoundtrip) {
         "0+0j",
         "1+2j"
     };
-    
+
     for (const auto& s : test_strings) {
         auto c1 = parse_complex(s);
         auto s2 = format_complex(c1);
         auto c2 = parse_complex(s2);
-        
+
         EXPECT_DOUBLE_EQ(c1.real(), c2.real());
         EXPECT_DOUBLE_EQ(c1.imag(), c2.imag());
     }

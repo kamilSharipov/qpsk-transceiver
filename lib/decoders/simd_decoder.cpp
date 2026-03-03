@@ -5,11 +5,9 @@
 
 namespace qpsk {
 
-
 template <int N>
 SimdDecoder<N>::SimdDecoder() {
     BlockEncoder<N> encoder;
-    
     for (size_t i = 0; i < (1ULL << N); i++) {
         auto codeword = encoder.encode(std::bitset<N>(i));
 
@@ -17,7 +15,6 @@ SimdDecoder<N>::SimdDecoder() {
             masks_[i][j] = codeword[j] ? 1.0 : 0.0;
         }
     }
-    
 }
 
 template <int N>
