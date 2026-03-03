@@ -1,6 +1,7 @@
 #include "encoder.hpp"
 #include "basic_decoder.hpp"
 #include "precomputed_decoder.hpp"
+#include "simd_decoder.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -42,10 +43,11 @@ void run_benchmarks(size_t iterations) {
     std::cout << "Benchmark for N = " << N << " bits\n";
     std::cout << "Combinations: " << (1ULL << N) << "\n";
     std::cout << "Iterations: " << iterations << "\n";
-    std::cout << "========================================\n";
+    std::cout << "========================================";
 
     BasicDecoder<N> basic;
     PrecomputedDecoder<N> precomputed;
+    SimdDecoder<N> simd;
 
     auto llrs = generate_random_llrs();
 
@@ -53,6 +55,7 @@ void run_benchmarks(size_t iterations) {
     for (int i = 0; i < 100; ++i) {
         basic.decode(llrs);
         precomputed.decode(llrs);
+        simd.decode(llrs);
     }
 
     std::cout << "\nResults:\n";
@@ -65,6 +68,10 @@ void run_benchmarks(size_t iterations) {
     double time_pre = benchmark_decoder<PrecomputedDecoder<N>, N>(precomputed, llrs, iterations);
     std::cout << "Precomputed: " << std::setw(8) << time_pre << " ms"
               << "  (x" << std::setprecision(2) << (time_basic / time_pre) << ")\n";
+
+    double time_simd = benchmark_decoder<SimdDecoder<N>, N>(simd, llrs, iterations);
+    std::cout << "AVX2.0: " << std::setw(8) << time_simd << " ms"
+              << "  (x" << std::setprecision(2) << (time_basic / time_simd) << ")\n";
 }
 
 int main() {

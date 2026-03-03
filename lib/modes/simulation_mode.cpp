@@ -1,6 +1,6 @@
 #include "system.hpp"
 #include "encoder.hpp"
-#include "basic_decoder.hpp"
+#include "simd_decoder.hpp"
 #include "qpsk.hpp"
 #include "channel.hpp"
 #include "random_bits.hpp"
@@ -12,7 +12,7 @@ namespace qpsk {
 template<int N>
 int process_simulation(int iterations, double snr_db) {
     BlockEncoder<N> code;
-    BasicDecoder<N> decoder;
+    SimdDecoder<N> decoder;
     QPSK mod;
     Channel channel(snr_db);
     
