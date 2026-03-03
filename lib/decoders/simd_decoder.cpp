@@ -1,8 +1,10 @@
 #include "simd_decoder.hpp"
 
+#ifdef __AVX2__
 #include <immintrin.h>
 
 namespace qpsk {
+
 
 template <int N>
 SimdDecoder<N>::SimdDecoder() {
@@ -61,3 +63,5 @@ template class SimdDecoder<8>;
 template class SimdDecoder<11>;
 
 } // namespace qpsk
+
+#endif
