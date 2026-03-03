@@ -5,8 +5,10 @@
 
 namespace qpsk {
 
+#ifdef __AVX2__
+
 template <int N>
-class SimdDecoder : public AbstractDecocer<N> {
+class SimdDecoder : public AbstractDecoder<N> {
 public:
     SimdDecoder();
     std::bitset<N> decode(const std::vector<double>& llrs) const override;
@@ -15,5 +17,15 @@ public:
 private:
     std::array<std::array<double, CODEWORD_SIZE>, 1ULL << N> masks_;
 };
+
+#else
+
+template <int N>
+class SimdDecoder : public AbstractDecoder<N> {
+private:
+    SimdDecoder() = delete;
+};
+
+#endif
 
 } // namespace qpsk

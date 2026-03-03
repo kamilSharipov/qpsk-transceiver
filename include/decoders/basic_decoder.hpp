@@ -6,7 +6,7 @@
 namespace qpsk {
 
 template <int N>
-class BasicDecoder : public AbstractDecocer<N> {
+class BasicDecoder : public AbstractDecoder<N> {
 public:
     std::bitset<N> decode(const std::vector<double>& llrs) const override;
     std::string name() const override { return "Basic"; }
