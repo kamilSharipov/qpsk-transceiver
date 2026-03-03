@@ -8,7 +8,7 @@
 namespace qpsk {
 
 template <int N>
-class PrecomputedDecoder : public AbstractDecocer<N> {
+class PrecomputedDecoder : public AbstractDecoder<N> {
 public:
     PrecomputedDecoder();
     std::bitset<N> decode(const std::vector<double>& llrs) const override;
